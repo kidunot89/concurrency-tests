@@ -12,7 +12,7 @@ import './app.css';
 const App = () => (
   <AppContext.Provider value={useAppState(initialState)}>
     <Container className="app-wrapper">
-      <h1>WooGraphQL Cart Tester</h1>
+      <h1>WooGraphQL Cart Mutation Tester</h1>
       <GraphQLEndpoint />
       <RequestManager />
       <RunQueryButton />

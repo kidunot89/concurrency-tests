@@ -1,4 +1,4 @@
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, useEffect } from 'react';
 import { get } from 'lodash';
 import {
   Col,
@@ -14,21 +14,28 @@ import axiosHelper, { VALID_URI_QUERY } from '../../utils/axios';
 
 const GraphQLEndpoint = () => {
   const { endpoint, updateEndpoint } = useContext(AppContext);
-  const [uriIsValid, updateUriValidity] = useState(false);
+  const [endpointIsValid, validateEndpoint] = useState(null);
 
-  const validateUri = (e) => {
+  const onChangeEndpoint = (e) => {
     updateEndpoint(e.target.value);
 
     axiosHelper.nextRequest(e.target.value, VALID_URI_QUERY)
-      .then((result) => {
-        if (! get(result, 'data.errors')) {
-          updateUriValidity(true)
+      .then((response) => {
+        if (!get(response, 'data.errors')) {
+          return validateEndpoint(true);
         } else {
-          updateUriValidity(false)
+          return validateEndpoint(false);
         }
       })
-      .catch(() => updateUriValidity(false));
+      .catch(() => validateEndpoint(false));
   };
+
+  useEffect(() => {
+    if (null === endpointIsValid) {
+      validateEndpoint(false);
+      onChangeEndpoint({ target: { value: endpoint } });
+    }
+  }, [endpointIsValid, onChangeEndpoint, endpoint]);
 
   return (
     <Row>
@@ -40,10 +47,10 @@ const GraphQLEndpoint = () => {
           <FormInput
             id="uri"
             value={endpoint}
-            onChange={validateUri}
+            onChange={onChangeEndpoint}
           />
           <InputGroupAddon type="append">
-            <InputGroupText>{uriIsValid ? '\u2714' : '\u2718'}</InputGroupText>
+            <InputGroupText>{endpointIsValid ? '\u2714' : '\u2718'}</InputGroupText>
           </InputGroupAddon>
         </InputGroup>
       </Col>

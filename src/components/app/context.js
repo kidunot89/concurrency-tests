@@ -1,17 +1,46 @@
 import React, { useState } from 'react';
 import { findIndex } from 'lodash';
 
-export const initialState = {
+const appData = JSON.parse(localStorage.getItem('app-data'));
+
+export const initialState = appData || {
   endpoint: '',
   requests: [],
   selectedRequest: false
-}
+};
 
 export function useAppState(initialState) {
-  const [endpoint, updateEndpoint] = useState(initialState.endpoint);
-  const [requests, updateRequests] = useState(initialState.requests);
-  const [selectedRequest, selectRequestIndex] = useState(initialState.selectedRequest);
+  const [endpoint, saveEndpoint] = useState(initialState.endpoint);
+  const [requests, saveRequests] = useState(initialState.requests);
+  const [selectedRequest, saveRequestIndex] = useState(initialState.selectedRequest);
   const [currentActionType, setCurrentActionType] = useState(null);
+
+  const saveAppData = (newState) => {
+    localStorage.setItem(
+      'app-data',
+      JSON.stringify({
+        endpoint,
+        requests,
+        selectedRequest,
+        ...newState
+      }),
+    );
+  };
+
+  const updateEndpoint = (endpoint) => {
+    saveEndpoint(endpoint);
+    saveAppData({ endpoint });
+  };
+
+  const updateRequests = (requests) => {
+    saveRequests(requests);
+    saveAppData({ requests });
+  }
+
+  const selectRequestIndex = (selectedRequest) => {
+    saveRequestIndex(selectedRequest);
+    saveAppData({ selectedRequest });
+  }
 
   const selectRequest = (name) => {
     const requestIndex = findIndex(requests, (request) => request.name === name);

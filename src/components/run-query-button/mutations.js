@@ -248,8 +248,6 @@ export const REMOVE_COUPONS = `
 
 export default function getMutation(type) {
   switch(type) {
-    case 'addToCart':
-      return ADD_TO_CART;
     case 'updateItemQuantities':
       return UPDATE_ITEM_QUANTITIES;
     case 'removeItemsFromCart':
@@ -262,5 +260,8 @@ export default function getMutation(type) {
       return APPLY_COUPON;
     case 'removeCoupons':
       return REMOVE_COUPONS;
+    case 'addToCart':
+    default:
+      return ADD_TO_CART;
   }
 }

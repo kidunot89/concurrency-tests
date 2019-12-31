@@ -1,10 +1,16 @@
 import axios from 'axios';
 
-const CancelToken = axios.CancelToken;
-
 class AxiosHelper {
   constructor() {
     this.headers = {};
+  }
+
+  addHeader(name, value) {
+    this.headers[name] = value;
+  }
+
+  removeHeader(name) {
+    delete this.headers[name];
   }
 
   nextRequest(uri, query, variables) {
@@ -14,11 +20,20 @@ class AxiosHelper {
       responseType: 'json',
       data: { query, variables },
       headers: this.headers,
-      onUploadProgress: (progressEvent) => {
-        console.log(progressEvent);
-      },
     });
   }
+
+  nextBatchRequest(uri, data) {
+    return axios({
+      url: uri,
+      method: 'post',
+      responseType: 'json',
+      data,
+      headers: this.headers,
+    });
+  }
+
+
 }
 
 const axiosHelper = new AxiosHelper();

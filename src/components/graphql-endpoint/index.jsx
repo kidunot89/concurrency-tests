@@ -2,7 +2,6 @@ import React, { useContext, useState } from 'react';
 import { get } from 'lodash';
 import {
   Col,
-  FormGroup,
   FormInput,
   InputGroup,
   InputGroupText,
@@ -10,30 +9,14 @@ import {
   Row,
 } from 'shards-react';
 
-import AppContext from '../app/app-context';
+import AppContext from '../app/context';
 import axiosHelper, { VALID_URI_QUERY } from '../../utils/axios';
-
-const inputGroupStyle = {
-  display: 'flex',
-  maxWidth: '66vw',
-}
-
-const labelStyle = {
-  marginRight: 'auto',
-}
 
 const GraphQLEndpoint = () => {
   const { endpoint, updateEndpoint } = useContext(AppContext);
   const [uriIsValid, updateUriValidity] = useState(false);
 
-  const uriStatusStyle = {
-    fontSize: '1.25em',
-    color: 'green',
-    opacity: uriIsValid ? 1 : 0,
-  };
-
   const validateUri = (e) => {
-    console.log('validateUri');
     updateEndpoint(e.target.value);
 
     axiosHelper.nextRequest(e.target.value, VALID_URI_QUERY)

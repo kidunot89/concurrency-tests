@@ -14,8 +14,9 @@ const App = () => (
     <Container className="app-wrapper">
       <h1>WooGraphQL Cart Mutation Tester</h1>
       <GraphQLEndpoint />
-      <RequestManager />
-      <RunQueryButton />
+      <RequestManager>
+        <RunQueryButton />
+      </RequestManager>
     </Container>
   </AppContext.Provider>
 );

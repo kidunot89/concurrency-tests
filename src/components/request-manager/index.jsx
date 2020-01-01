@@ -11,7 +11,7 @@ import SelectBar from './select-bar';
 import Controls from './controls';
 import Editor from './editor';
 
-const RequestManager = () => {
+const RequestManager = ({ children }) => {
   const { selectedRequest } = useContext(AppContext);
 
   return (
@@ -28,6 +28,7 @@ const RequestManager = () => {
             </Row>
           </Container>
         )}
+        {children}
       </Container>
     </RequestManagerContext.Provider>
   );

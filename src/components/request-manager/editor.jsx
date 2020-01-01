@@ -1,6 +1,5 @@
 import React, { useState, useContext } from 'react';
 import {
-  FormTextarea,
   Container,
   Col,
   Row,
@@ -19,7 +18,7 @@ import MutationModal from './mutations';
 
 const Editor = () => {
   const {
-    getRequestFieldHandler,
+    getRequestFieldValue,
     currentActionType,
     setCurrentActionType,
     clearActionType,
@@ -42,12 +41,7 @@ const Editor = () => {
     };
   };
 
-  return activeTab === 'tests' ? (
-    <>
-      <p className="float-right mb-2 h4">Tests</p>
-      <FormTextarea className="mb-3" onChange={getRequestFieldHandler('tests')} />
-    </>
-  ) : (
+  return (
     <Container>
       <Row>
         <Col sm="12" md="4">
@@ -76,17 +70,28 @@ const Editor = () => {
           </Nav>
           <MutationModal open={showModal} type={currentActionType} toggle={onToggleModal} />
         </Col>
-        <Col>
-          <ListGroup flush className="mt-3">
-            <ListGroupItemHeading>Request Mutations</ListGroupItemHeading>
-            {currentRequest.actions.map(({ type, variables }, index) => (
-              <ListGroupItem key={`${type}-${index}`}>
-                <p><em>Mutation: </em>{type}</p>
-                <p><em>Variables: </em>{JSON.stringify(variables)}</p>
-                <Button theme="danger" onClick={() => removeAction(index)}>Remove</Button>
-              </ListGroupItem>
-            ))}
-          </ListGroup>
+        <Col sm="12" md="8">
+          <ListGroup flush className="my-3">
+            {activeTab === 'tests' ? (
+              <>
+                <ListGroupItemHeading>Tests Results</ListGroupItemHeading>
+                <ListGroupItem>
+                  <small><samp>{getRequestFieldValue('tests')}</samp></small>
+                </ListGroupItem>
+              </>
+            ):(
+              <>
+                <ListGroupItemHeading>Request Mutations</ListGroupItemHeading>
+                {currentRequest.actions.map(({ type, variables }, index) => (
+                  <ListGroupItem key={`${type}-${index}`}>
+                    <p><em>Mutation: </em>{type}</p>
+                    <p><em>Variables: </em>{JSON.stringify(variables)}</p>
+                    <Button theme="danger" onClick={() => removeAction(index)}>Remove</Button>
+                  </ListGroupItem>
+                ))}
+              </>
+            )}
+          </ListGroup>          
         </Col>
       </Row>
     </Container>

@@ -6,9 +6,11 @@ export const ADD_TO_CART = `
         key
         product {
           id
+          productId
         }
         variation {
           id
+          variationId
         }
         quantity
         subtotal
@@ -22,9 +24,11 @@ export const ADD_TO_CART = `
             key
             product {
               id
+              productId
             }
             variation {
               id
+              variationId
             }
             quantity
             subtotal
@@ -60,9 +64,11 @@ export const UPDATE_ITEM_QUANTITIES = `
             key
             product {
               id
+              productId
             }
             variation {
               id
+              variationId
             }
             quantity
             subtotal
@@ -84,9 +90,11 @@ export const REMOVE_ITEMS_FROM_CART = `
         key
         product {
           id
+          productId
         }
         variation {
           id
+          variationId
         }
         quantity
         subtotal
@@ -100,9 +108,11 @@ export const REMOVE_ITEMS_FROM_CART = `
             key
             product {
               id
+              productId
             }
             variation {
               id
+              variationId
             }
             quantity
             subtotal
@@ -124,9 +134,11 @@ export const RESTORE_CART_ITEMS = `
         key
         product {
           id
+          productId
         }
         variation {
           id
+          variationId
         }
         quantity
         subtotal
@@ -140,9 +152,11 @@ export const RESTORE_CART_ITEMS = `
             key
             product {
               id
+              productId
             }
             variation {
               id
+              variationId
             }
             quantity
             subtotal
@@ -166,9 +180,11 @@ export const EMPTY_CART = `
             key
             product {
               id
+              productId
             }
             variation {
               id
+              variationId
             }
             quantity
             subtotal
@@ -197,9 +213,11 @@ export const APPLY_COUPON = `
             key
             product {
               id
+              productId
             }
             variation {
               id
+              variationId
             }
             quantity
             subtotal
@@ -225,20 +243,20 @@ export const REMOVE_COUPONS = `
         }
         contents {
           nodes {
-              key
-              product {
-                ... on SimpleProduct {
-                  id
-                }
-                ... on VariableProduct {
-                  id
-                }
-              }
-              quantity
-              subtotal
-              subtotalTax
-              total
-              tax
+            key
+            product {
+              id
+              variationId
+            }
+            variation {
+              id
+              variationId
+            }
+            quantity
+            subtotal
+            subtotalTax
+            total
+            tax
           }
         }
       }

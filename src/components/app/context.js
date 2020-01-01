@@ -34,7 +34,13 @@ export function useAppState(initialState) {
 
   const updateRequests = (requests) => {
     saveRequests(requests);
-    saveAppData({ requests });
+
+    // Strip tests results from saved "requests" object.
+    const requestsWOTests = requests.map(({ tests, ...rest }) => {
+      return { ...rest, }
+    })
+
+    saveAppData({ requests: requestsWOTests });
   }
 
   const selectRequestIndex = (selectedRequest) => {
@@ -51,24 +57,38 @@ export function useAppState(initialState) {
     return false;
   }
 
-  const getRequestFieldValue = (field) => {
-    return requests[selectedRequest][field];
+  const getRequestFieldValue = (field, index = null) => {
+    const i = index || selectedRequest;
+    return requests[i][field];
   }
 
-  const getRequestFieldHandler = (field) => {
+  const updateRequestField = (field, value, index = null) => {
+    const i = index || selectedRequest;
+    const currentRequest = requests[i];
+    let newRequest = Object.assign(currentRequest, { [field]: value });
+    updateRequests(requests.map((request, index) => (index === selectedRequest) ? newRequest : request));
+  }
+
+  const getRequestFieldHandler = (field, index = null) => {
+    const i = index || selectedRequest;
     return (e) => {
-      const currentRequest = requests[selectedRequest];
-      let newRequest;
       switch (field) {
         case 'batch':
-          newRequest = Object.assign(currentRequest, { [field]: !currentRequest[field] });
+          updateRequestField(field, !getRequestFieldValue(field, i), i);
           break;
         default:
-          newRequest = Object.assign(currentRequest, { [field]: e.target.value });
+          updateRequestField(field, e.target.value, i);
           break;
       }
-      updateRequests(requests.map((request, index) => (index === selectedRequest) ? newRequest : request));
     };
+  };
+
+  const clearAllRequestFields = (field, defaultValue = '') => {
+    updateRequests(
+      requests.map((request) => {
+        return {...request, [field]: defaultValue };
+      }),
+    );
   };
 
   const addRequest = (name, options = {} ) => {
@@ -76,6 +96,7 @@ export function useAppState(initialState) {
       ...{
         actions: [],
         batch: false,
+        tests: '',
       },
       ...options,
       name,
@@ -122,9 +143,14 @@ export function useAppState(initialState) {
     updateRequests(requests.map((request, index) => (index === selectedRequest) ? newRequest : request));
   };
 
+  const eachRequest = (callback) => {
+    requests.forEach(callback);
+  }
+
   return {
     endpoint,
     requests,
+    eachRequest,
     selectedRequest,
     updateEndpoint,
     updateRequests,
@@ -134,7 +160,9 @@ export function useAppState(initialState) {
     removeRequest,
     selectRequestIndex,
     getRequestFieldValue,
+    updateRequestField,
     getRequestFieldHandler,
+    clearAllRequestFields,
     currentActionType,
     setCurrentActionType,
     clearActionType: () => setCurrentActionType(null),

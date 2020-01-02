@@ -43,13 +43,13 @@ const RunQueryButton = () => {
     console.log(requests);
     selectTab('tests');
     eachRequest((request, index) => {
-      selectRequestIndex(index);
       const print = (message) => {
-        const previous = getRequestFieldValue('tests') || '';
+        const previous = getRequestFieldValue('tests', index) || '';
         updateRequestField(
           'tests',
           `${previous}
-          ${message}`
+          ${message}`,
+          index
         );
       }
       const { actions, batch } = request
@@ -68,7 +68,7 @@ const RunQueryButton = () => {
         const { type, variables } = actions[0];
         AxiosHelper
         .nextRequest(sessionId, endpoint, getMutation(type), variables)
-        .then((response) => processSessionAndTestResponse(response, request, 0, print));
+        .then((response) => processSessionAndTestResponse(response, request, index, print));
       }
     });
   };

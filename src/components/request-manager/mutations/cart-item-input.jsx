@@ -62,7 +62,7 @@ const CartItemInput = (props) => {
     const inputValue = value.trim().toLowerCase();
     const inputLength = inputValue.length;
 
-    return inputLength === 0 ? [] : cartItems.filter(({ name, value }) => {
+    return inputLength === 0 ? cartItems : cartItems.filter(({ name, value }) => {
       return name.toLowerCase().slice(0, inputLength) === inputValue 
         || value.toLowerCase().slice(0, inputLength) === inputValue 
     });

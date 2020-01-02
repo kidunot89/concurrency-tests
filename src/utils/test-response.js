@@ -9,6 +9,12 @@ const testResponse = (response, request, index) => {
 
   request.actions.forEach(({ type, variables }, actionIndex) => {
     let data;
+    if (Array.isArray(response.data)) {
+      data = response.data[actionIndex].data;
+    } else {
+      data = response.data.data;
+    }
+
     try {
       switch (type) {
         case 'addToCart':
@@ -16,7 +22,7 @@ const testResponse = (response, request, index) => {
           console.log(`addToCart product ${productId} x ${quantity}`);
 
           // Confirm data.
-          data = response.data[actionIndex].data.addToCart;
+          data = data.addToCart;
           assert.isOk(data, 'Invalid addToCart object');
 
           // Test "cartItem" output.
@@ -50,7 +56,7 @@ const testResponse = (response, request, index) => {
           console.log(`updateItemQuantities ${itemNames}`);
 
           // Confirm data.
-          data = response.data[actionIndex].data.updateItemQuantities;
+          data = data.updateItemQuantities;
           assert.isOk(data, 'Invalid updateItemQuantities object');
 
           // Test "items" output.

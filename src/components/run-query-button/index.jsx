@@ -4,7 +4,7 @@ import { Button, Row } from 'shards-react';
 
 import AppContext from '../app/context';
 import RequestManagerContext from '../request-manager/context';
-import AxiosHelper from '../../utils/axios';
+import AxiosHelper from '../../utils/axios-helper';
 import getMutation from './mutations';
 import testResponse from '../../utils/test-response';
 
@@ -27,7 +27,16 @@ const processSessionAndTestResponse = (response, request, index = 0, print = (m)
 }
 
 const RunQueryButton = () => {
-  const { endpoint, requests, eachRequest, getRequestFieldValue, updateRequestField, selectRequestIndex, clearAllRequestFields } = useContext(AppContext);
+  const {
+    endpoint,
+    requests,
+    eachRequest,
+    getRequestFieldValue,
+    updateRequestField,
+    selectRequestIndex,
+    clearAllRequestFields,
+    sessionId,
+  } = useContext(AppContext);
   const { selectTab } = useContext(RequestManagerContext);
   const runQueries = () => {
     clearAllRequestFields('tests');
@@ -47,6 +56,7 @@ const RunQueryButton = () => {
       if (batch) {
         AxiosHelper
         .nextBatchRequest(
+          sessionId,
           endpoint,
           actions.map(({ type, variables }) => ({ query: getMutation(type), variables })),
         )
@@ -57,7 +67,7 @@ const RunQueryButton = () => {
         }
         const { type, variables } = actions[0];
         AxiosHelper
-        .nextRequest(endpoint, getMutation(type), variables)
+        .nextRequest(sessionId, endpoint, getMutation(type), variables)
         .then((response) => processSessionAndTestResponse(response, request, 0, print));
       }
     });

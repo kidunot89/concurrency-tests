@@ -6,11 +6,13 @@ const appData = JSON.parse(localStorage.getItem('app-data'));
 export const initialState = appData || {
   endpoint: '',
   requests: [],
-  selectedRequest: false
+  selectedRequest: false,
+  sessionId: null,
 };
 
 export function useAppState(initialState) {
   const [endpoint, saveEndpoint] = useState(initialState.endpoint);
+  const [sessionId, setSessionId] = useState(initialState.sessionId);
   const [requests, saveRequests] = useState(initialState.requests);
   const [selectedRequest, saveRequestIndex] = useState(initialState.selectedRequest);
   const [currentActionType, setCurrentActionType] = useState(null);
@@ -22,6 +24,7 @@ export function useAppState(initialState) {
         endpoint,
         requests,
         selectedRequest,
+        sessionId: null,
         ...newState
       }),
     );
@@ -150,10 +153,12 @@ export function useAppState(initialState) {
   return {
     endpoint,
     requests,
-    eachRequest,
+    sessionId,
     selectedRequest,
+    eachRequest,
     updateEndpoint,
     updateRequests,
+    setSessionId,
     selectRequest,
     addRequest,
     updateRequestName,

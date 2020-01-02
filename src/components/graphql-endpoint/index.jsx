@@ -10,16 +10,21 @@ import {
 } from 'shards-react';
 
 import AppContext from '../app/context';
-import axiosHelper, { VALID_URI_QUERY } from '../../utils/axios';
+import axiosHelper, { VALID_URI_QUERY } from '../../utils/axios-helper';
 
 const GraphQLEndpoint = () => {
-  const { endpoint, updateEndpoint } = useContext(AppContext);
+  const {
+    endpoint,
+    updateEndpoint,
+    sessionId,
+    setSessionId,
+  } = useContext(AppContext);
   const [endpointIsValid, validateEndpoint] = useState(null);
 
   const onChangeEndpoint = (e) => {
     updateEndpoint(e.target.value);
 
-    axiosHelper.nextRequest(e.target.value, VALID_URI_QUERY)
+    axiosHelper.nextRequest(null, e.target.value, VALID_URI_QUERY)
       .then((response) => {
         if (!get(response, 'data.errors')) {
           return validateEndpoint(true);
@@ -30,12 +35,23 @@ const GraphQLEndpoint = () => {
       .catch(() => validateEndpoint(false));
   };
 
+  const createSession = async () => {
+    const newSessionId = await axiosHelper.createSession(endpoint);
+    
+    if (newSessionId) {
+      setSessionId(newSessionId);
+    }
+  }
+
   useEffect(() => {
     if (null === endpointIsValid) {
       validateEndpoint(false);
       onChangeEndpoint({ target: { value: endpoint } });
     }
-  }, [endpointIsValid, onChangeEndpoint, endpoint]);
+    else if (true === endpointIsValid && sessionId === null) {
+      createSession();
+    }
+  }, [endpointIsValid, onChangeEndpoint, endpoint, sessionId, createSession]);
 
   return (
     <Row>

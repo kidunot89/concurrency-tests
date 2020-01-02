@@ -11,6 +11,7 @@ import {
 import v4 from 'uuid/v4';
 
 import AppContext from '../../app/context';
+import CartItemInput from './cart-item-input';
 
 const RemoveItemsFromCart = ({ closeModal }) => {
   const { addNewAction } = useContext(AppContext);
@@ -21,8 +22,8 @@ const RemoveItemsFromCart = ({ closeModal }) => {
   };
 
   const getKeyHandler = (selectedIndex) => {
-    return (e) => {
-      let newKey = e.target.value;
+    return (e, { newValue } = {}) => {
+      let newKey = newValue || e.target.value;
       updateKeys(keys.map((key, index) => (index === selectedIndex) ? newKey : key));
     }
   }
@@ -49,7 +50,7 @@ const RemoveItemsFromCart = ({ closeModal }) => {
           <FormGroup>
             <label htmlFor={`cart-item-key-${index}`}>Cart Item Key</label>
             <InputGroup>
-              <FormInput
+              <CartItemInput
                 id={`cart-item-key-${index}`}
                 value={key}
                 onChange={getKeyHandler(index)}

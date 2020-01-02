@@ -11,6 +11,7 @@ import {
 import v4 from 'uuid/v4';
 
 import AppContext from '../../app/context';
+import CartItemInput from './cart-item-input';
 
 const UpdateItemQuantities = ({ closeModal }) => {
   const { addNewAction } = useContext(AppContext);
@@ -21,9 +22,10 @@ const UpdateItemQuantities = ({ closeModal }) => {
   };
 
   const getItemFieldHandler = (selectedIndex, field) => {
-    return (e) => {
+    return (e, { newValue } = {}) => {
       const oldItem = items[selectedIndex];
-      let newItem = Object.assign(oldItem, { [field]: e.target.value });
+      console.log(e);
+      let newItem = Object.assign(oldItem, { [field]: newValue || e.target.value });
       updateItems(items.map((item, index) => (index === selectedIndex) ? newItem : item));
     }
   }
@@ -50,7 +52,7 @@ const UpdateItemQuantities = ({ closeModal }) => {
           <FormGroup>
             <label htmlFor={`cart-item-${index}-key`}>Cart Item Key</label>
             <InputGroup>
-              <FormInput
+              <CartItemInput
                 id={`cart-item-${index}-key`}
                 value={item.key}
                 onChange={getItemFieldHandler(index, 'key')}
@@ -64,12 +66,12 @@ const UpdateItemQuantities = ({ closeModal }) => {
           <FormGroup>
             <label htmlFor={`cart-item-${index}-quantity`}>New Quantity</label>
             <FormInput
-              type="number"
-              id={`cart-item-${index}-quantity`}
-              value={item.quantity}
-              onChange={getItemFieldHandler(index, 'quantity')}
-              required
-            />
+                type="number"
+                id={`cart-item-${index}-quantity`}
+                value={item.quantity}
+                onChange={getItemFieldHandler(index, 'quantity')}
+                required
+              />
           </FormGroup>
         </React.Fragment>
       ))}

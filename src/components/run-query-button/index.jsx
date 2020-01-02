@@ -16,8 +16,8 @@ const processSessionAndTestResponse = (response, request, index = 0, print = (m)
   
   // Hijack Console Log.
   const oldLog = console.log.bind(console);
-  console.log = function() {
-    print(JSON.stringify([...arguments]));
+  console.log = function(...messages) {
+    print(JSON.stringify(messages));
   };
 
   testResponse(response, request, index);

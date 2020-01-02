@@ -55,11 +55,15 @@ class AxiosHelper {
     }
 
     const { products } = results.data.data;
-    for (let i = 0; i < 5; i++) {
+    for (let i = 0; i < random(5, 7); i++) {
       const nextProduct = products.nodes[random(0, products.nodes.length - 1)];
-      const input = { clientMutationId: v4(), productId: nextProduct.productId };
+      const input = {
+        clientMutationId: v4(),
+        productId: nextProduct.productId,
+        quantity: random(1, 6),
+      };
 
-      if ('variable' === nextProduct.type && !isEmpty(nextProduct.variations.nodes)) {
+      if ('VARIABLE' === nextProduct.type && !isEmpty(nextProduct.variations.nodes)) {
         input.variationId = nextProduct.variations.nodes[0].variationId;
       } 
 
